@@ -1,4 +1,4 @@
-package com.example.SpringBootStudy99.Cotroller;
+package com.example.SpringBootStudy99.cotroller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
