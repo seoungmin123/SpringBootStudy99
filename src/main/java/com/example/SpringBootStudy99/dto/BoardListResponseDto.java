@@ -15,6 +15,6 @@ import java.time.LocalDateTime;
 public class BoardListResponseDto {
     private Long id;
     private String title;
-    private String username;
-    private LocalDateTime createdAt;
+    private String writer;
+    private LocalDateTime rgstDt;
 }

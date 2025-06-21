@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 // 게시글 응답 DTO (단건 조회용)
 public class BoardResponseDto {
-    private Long id;
+    private Long boardNo;
     private String title;
-    private String username;
+    private String writer;
     private String content;
-    private LocalDateTime createdAt;
+    private LocalDateTime rgstDt;
 }

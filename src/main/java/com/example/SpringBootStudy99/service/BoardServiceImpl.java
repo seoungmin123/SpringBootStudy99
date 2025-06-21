@@ -5,6 +5,7 @@ import com.example.SpringBootStudy99.dto.BoardCreateRequestDto;
 import com.example.SpringBootStudy99.dto.BoardListResponseDto;
 import com.example.SpringBootStudy99.dto.BoardResponseDto;
 import com.example.SpringBootStudy99.dto.BoardUpdateRequestDto;
+import com.example.SpringBootStudy99.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    private final BoardResponseDto boardRepository;
+    private final BoardRepository boardRepository;
 
     //상세조회
     @Override
@@ -34,7 +35,7 @@ public class BoardServiceImpl implements BoardService {
     public BoardResponseDto createBoard(BoardCreateRequestDto requestDto) {
         //정적 메서드 방식을 사용했음 BoardVO에 추가함
         BoardVO boardVO = BoardVO.from(requestDto);
-        boardRepository.save(boardVO); //왜
+        boardRepository.save(boardVO);
         return null;
     }
 

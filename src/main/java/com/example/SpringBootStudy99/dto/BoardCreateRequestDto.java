@@ -12,7 +12,7 @@ import lombok.Setter;
 // 게시글 작성 요청 DTO
 public class BoardCreateRequestDto {
     private String title;
-    private String username;
-    private String password;
+    private String writer;
+    private String boardPwd;
     private String content;
 }

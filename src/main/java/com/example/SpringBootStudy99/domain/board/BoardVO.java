@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @Table(name = "board")
 public class BoardVO {
@@ -51,10 +52,10 @@ public class BoardVO {
     // 정적메서드 방식
     public static BoardVO from(BoardCreateRequestDto dto) {
         return new BoardVO(
-                dto.getUsername(),
+                dto.getWriter(),
                 dto.getTitle(),
                 dto.getContent(),
-                dto.getPassword(),
+                dto.getBoardPwd(),
                 LocalDateTime.now()
         );
     }
