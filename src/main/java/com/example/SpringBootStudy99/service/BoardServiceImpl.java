@@ -34,7 +34,7 @@ public class BoardServiceImpl implements BoardService {
     public BoardResponseDto createBoard(BoardCreateRequestDto requestDto) {
         //정적 메서드 방식을 사용했음 BoardVO에 추가함
         BoardVO boardVO = BoardVO.from(requestDto);
-        boardRepository.save(boardVO);
+        boardRepository.save(boardVO); //왜
         return null;
     }
 
