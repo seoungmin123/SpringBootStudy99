@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SpringBoot 이승민 사이트</title>
+</head>
+<body>
+
+<h1>로그인 (추후구현~)</h1>
+
+<form th:action="@{/login}" method="post">
+    <div>
+        <label for="userId">아이디:</label>
+        <input type="text" id="userId" name="userId" required>
+    </div>
+    <div>
+        <label for="userPwd">비밀번호:</label>
+        <input type="password" id="userPwd" name="userPwd" required>
+    </div>
+    <div>
+        <button type="submit">로그인</button>
+    </div>
+</form>
+
+<!-- 게시글 작성 링크 -->
+<a href="/board/list">게시판으로 이동</a>
+</br>
+<a href="/board/write">글 작성</a>
+
+</body>
+</html>

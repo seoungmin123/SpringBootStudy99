@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,4 +17,6 @@ public class BoardCreateRequestDto {
     private String writer;
     private String boardPwd;
     private String content;
+    private LocalDateTime rgstDt;
+    private LocalDateTime udtDt;
 }
