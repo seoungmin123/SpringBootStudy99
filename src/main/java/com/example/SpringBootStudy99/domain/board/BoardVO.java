@@ -1,7 +1,6 @@
 package com.example.SpringBootStudy99.domain.board;
 
 import com.example.SpringBootStudy99.dto.BoardCreateRequestDto;
-import com.example.SpringBootStudy99.dto.BoardResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -80,6 +79,7 @@ public class BoardVO {
             this.writer = writer;
         }
             this.content = content;
+            this.udtDt = LocalDateTime.now();
     }
 
 }
