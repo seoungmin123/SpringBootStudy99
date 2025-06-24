@@ -1,6 +1,7 @@
 package com.example.SpringBootStudy99.exception;
 
 import com.example.SpringBootStudy99.common.ApiResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,13 @@ public class CommonExceptionHandler {
     @ExceptionHandler(InvalidPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<?> handleInvalidPassword(InvalidPasswordException ex) {
+        return ApiResponse.error(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+    }
+
+    // 등록되지않은 유저일때
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<?> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         return ApiResponse.error(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 
