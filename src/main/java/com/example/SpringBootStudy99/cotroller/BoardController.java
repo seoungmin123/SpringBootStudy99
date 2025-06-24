@@ -1,15 +1,11 @@
 package com.example.SpringBootStudy99.cotroller;
 
-import com.example.SpringBootStudy99.domain.board.BoardVO;
 import com.example.SpringBootStudy99.dto.BoardCreateRequestDto;
 import com.example.SpringBootStudy99.dto.BoardListResponseDto;
 import com.example.SpringBootStudy99.dto.BoardResponseDto;
 import com.example.SpringBootStudy99.dto.BoardUpdateRequestDto;
 import com.example.SpringBootStudy99.service.BoardServiceImpl;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 

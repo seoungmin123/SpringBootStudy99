@@ -1,6 +1,5 @@
 package com.example.SpringBootStudy99.repository;
 
-import com.example.SpringBootStudy99.domain.board.BoardVO;
 import com.example.SpringBootStudy99.domain.user.UserVO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
