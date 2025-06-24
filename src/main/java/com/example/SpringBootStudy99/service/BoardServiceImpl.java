@@ -86,6 +86,5 @@ public class BoardServiceImpl implements BoardService {
 
         //게시글 삭제
         boardRepository.delete(board);
-
     }
 }
