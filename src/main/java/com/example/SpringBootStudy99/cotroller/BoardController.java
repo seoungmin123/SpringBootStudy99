@@ -1,82 +1,65 @@
-package com.example.SpringBootStudy99.cotroller;
+package com.example.SpringBootStudy99.controller;
 
+import com.example.SpringBootStudy99.common.ApiResponse;
 import com.example.SpringBootStudy99.dto.BoardCreateRequestDto;
 import com.example.SpringBootStudy99.dto.BoardListResponseDto;
 import com.example.SpringBootStudy99.dto.BoardResponseDto;
 import com.example.SpringBootStudy99.dto.BoardUpdateRequestDto;
 import com.example.SpringBootStudy99.service.BoardServiceImpl;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/board")
+@RequiredArgsConstructor
 public class BoardController {
 
     private final BoardServiceImpl boardServiceImpl;
 
-    // 생성자 주입
-    public BoardController(BoardServiceImpl boardServiceImpl) {
-        this.boardServiceImpl = boardServiceImpl;
-    }
-
-    //전체목록조회
+    /** 전체 목록 조회 */
     @GetMapping("/")
-    public List<BoardListResponseDto> getAllBoards() {
-        return boardServiceImpl.getBoardList();  // JSON 응답
+    public ResponseEntity<ApiResponse<List<BoardListResponseDto>>> getAllBoards() {
+        List<BoardListResponseDto> boardList = boardServiceImpl.getBoardList();
+        return ResponseEntity.ok(ApiResponse.success(boardList));
     }
 
-    //상세조회
+    /** 게시글 상세 조회 */
     @GetMapping("/{id}")
-    public BoardResponseDto getDetailBoard(@PathVariable Long id) {
-        return boardServiceImpl.getBoard(id);  // JSON 응답
+    public ResponseEntity<ApiResponse<BoardResponseDto>> getDetailBoard(@PathVariable Long id) {
+        BoardResponseDto board = boardServiceImpl.getBoard(id);
+        return ResponseEntity.ok(ApiResponse.success(board));
     }
 
-    //작성
+    /** 게시글 작성 */
     @PostMapping("/")
-    public BoardResponseDto insertBoard(@RequestBody BoardCreateRequestDto requestDto) {
-        return boardServiceImpl.createBoard(requestDto);
+    public ResponseEntity<ApiResponse<BoardResponseDto>> insertBoard(
+                    @RequestBody @Valid BoardCreateRequestDto requestDto) {
+        BoardResponseDto created = boardServiceImpl.createBoard(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("게시글이 생성되었습니다.", created));
     }
 
-    //수정
+    /** 게시글 수정 */
     @PutMapping("/{id}")
-    public BoardResponseDto updateBoard(
+    public ResponseEntity<ApiResponse<BoardResponseDto>> updateBoard(
             @PathVariable Long id,
             @RequestBody BoardUpdateRequestDto requestDto) {
-        return boardServiceImpl.updateBoard(id, requestDto);
+        BoardResponseDto updated = boardServiceImpl.updateBoard(id, requestDto);
+        return ResponseEntity.ok(ApiResponse.success("게시글이 수정되었습니다.", updated));
     }
 
-    //삭제
+    /** 게시글 삭제 */
     @DeleteMapping("/{id}")
-    public void deleteBoard(@PathVariable Long id, @RequestParam String password) {
+    public ResponseEntity<ApiResponse<Void>> deleteBoard(
+            @PathVariable Long id,
+            @RequestParam String password) {
         boardServiceImpl.deleteBoard(id, password);
+        return ResponseEntity.ok(ApiResponse.success("게시글이 삭제되었습니다.", null));
     }
-
-/*
-@GetMapping("/index")
-    public ModelAndView home() {
-        return new ModelAndView("index");
-    }
-
-    @GetMapping("/list")
-    public String list(Model model) {
-        List<BoardListResponseDto> boardList = boardServiceImpl.getBoardList();
-        model.addAttribute("boardList", boardList);
-        return "board/list"; // templates/board/list.html
-    }
-    @GetMapping("/view/{id}")
-    public String view(@PathVariable Long id, Model model) {
-        // 게시글 상세 조회 로직
-        BoardResponseDto boardDetail = boardServiceImpl.getBoard(id);
-        model.addAttribute("board", boardDetail);
-        return "board/view"; // board/view.html 템플릿을 렌더링
-    }
-
-    @GetMapping("/write")
-    public String writeForm(Model model) {
-        model.addAttribute("post", new BoardCreateRequestDto()); // 빈 게시글 객체 전달
-        return "board/write"; // board/write.html 템플릿 렌더링
-    }
-*/
 
 }

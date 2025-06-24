@@ -7,6 +7,7 @@ import com.example.SpringBootStudy99.dto.BoardResponseDto;
 import com.example.SpringBootStudy99.dto.BoardUpdateRequestDto;
 import com.example.SpringBootStudy99.repository.BoardRepository;
 import com.example.SpringBootStudy99.repository.UserRepository;
+import com.example.SpringBootStudy99.validator.BoardValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
+    private final BoardValidator boardValidator;
 
     //목록조회
     @Override
@@ -36,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public BoardResponseDto getBoard(Long id) {
         //유효성 체크
-        BoardVO board = getBoardOrThrow(id); //게시글 존재 확인
+        BoardVO board = boardValidator.getBoardOrThrow(id); //게시글 존재 확인
         board.addViewCount(); // 조회수 증가
 
         return BoardResponseDto.from(board); // BoardVO → DTO 변환
@@ -47,7 +48,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public BoardResponseDto createBoard(BoardCreateRequestDto requestDto) {
         //유효성 체크
-        validateUserExists(requestDto.getWriter()); //등록되지 않은유저일경우
+        boardValidator.validateUserExists(requestDto.getWriter()); //등록되지 않은유저일경우
 
         //정적 메서드 방식을 사용했음 BoardVO에 추가함
         BoardVO boardVO = BoardVO.from(requestDto);
@@ -61,8 +62,8 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public BoardResponseDto updateBoard(Long id, BoardUpdateRequestDto requestDto) {
         //유효성 체크
-        BoardVO board = getBoardOrThrow(id); //게시글 존재 확인
-        validateBoardPassword(board , requestDto.getBoardPwd()); //게시글 비밀번호일치 확인
+        BoardVO board = boardValidator.getBoardOrThrow(id); //게시글 존재 확인
+        boardValidator.validateBoardPassword(board , requestDto.getBoardPwd()); //게시글 비밀번호일치 확인
 
         //게시글 수정
         board.update(requestDto.getTitle(), requestDto.getWriter(), requestDto.getContent());  // BoardVO 내부에서 setter 대신 update 메서드 사용
@@ -76,36 +77,13 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public void deleteBoard(Long id, String password) {
         //유효성 체크
-        BoardVO board = getBoardOrThrow(id); //게시글 존재 확인
-        validateBoardPassword(board , password); //게시글 비밀번호일치 확인
+        BoardVO board = boardValidator.getBoardOrThrow(id); //게시글 존재 확인
+        boardValidator.validateBoardPassword(board , password); //게시글 비밀번호일치 확인
 
         //게시글 삭제
         boardRepository.delete(board);
     }
 
-
-    //예외처리 메소드
-    //게시글 비밀번호 확인
-    public void validateBoardPassword(BoardVO board , String reqPassword){
-        //게시글 비밀번호가 일치시
-        if (!board.getBoardPwd().equals(reqPassword)) {
-            throw new IllegalArgumentException("[게시글] 게시글 비밀번호가 일치하지 않습니다. 입력한 비밀번호 : " + reqPassword);
-        }
-    }
-
-    // 게시글 존재확인 getBoardOrThrow
-    public BoardVO getBoardOrThrow(Long reqId){
-        return boardRepository.findById(reqId)
-                .orElseThrow(() -> new IllegalArgumentException("[게시글] 해당 게시글이 존재하지않습니다. id=" + reqId));
-    }
-
-    //사용자 존재확인 validateUserExists
-    public void validateUserExists(String reqWriter) {
-        //등록되지 않은유저일경우
-        if (!userRepository.existsById(reqWriter)) {
-            throw new IllegalArgumentException("[사용자] 등록되지 않은 사용자입니다.");
-        }
-    }
 
 
 
