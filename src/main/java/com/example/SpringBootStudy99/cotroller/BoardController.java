@@ -48,7 +48,7 @@ public class BoardController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<BoardResponseDto>> updateBoard(
             @PathVariable Long id,
-            @RequestBody BoardUpdateRequestDto requestDto) {
+            @RequestBody @Valid BoardUpdateRequestDto requestDto) {
         BoardResponseDto updated = boardServiceImpl.updateBoard(id, requestDto);
         return ResponseEntity.ok(ApiResponse.success("게시글이 수정되었습니다.", updated));
     }
