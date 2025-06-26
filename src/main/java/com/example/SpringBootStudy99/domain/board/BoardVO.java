@@ -65,6 +65,7 @@ public class BoardVO {
         );
     }
 
+    //TODO 프로젝션을 활용한 것으로 DTO수정 하기
     //기능
     //조회수 증가
     public void addViewCount() {
