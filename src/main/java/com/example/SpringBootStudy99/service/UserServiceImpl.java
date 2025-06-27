@@ -3,6 +3,7 @@ package com.example.SpringBootStudy99.service;
 import com.example.SpringBootStudy99.common.ApiResponse;
 import com.example.SpringBootStudy99.domain.user.UserVO;
 import com.example.SpringBootStudy99.dto.UserCreateRequstDto;
+import com.example.SpringBootStudy99.dto.UserLoginDto;
 import com.example.SpringBootStudy99.projection.UserResponseProjection;
 import com.example.SpringBootStudy99.repository.UserRepository;
 import com.example.SpringBootStudy99.validator.UserValidator;
@@ -18,6 +19,13 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final UserValidator userValidator;
 
+    //회원 전체조회
+    @Override
+    public List<UserResponseProjection> getUserList() {
+        return userRepository.findAllProjectedBy();
+    }
+
+    //회원가입
     @Override
     //성공 실패 모르니까 ApiResponse<?>로 반환타입 받기로함
     public ApiResponse<?> createUser(UserCreateRequstDto requestDto) {
@@ -36,8 +44,28 @@ public class UserServiceImpl implements UserService{
         return ApiResponse.success("회원가입 성공", result);
     }
 
+    //로그인
     @Override
-    public List<UserResponseProjection> getUserList() {
-        return userRepository.findAllProjectedBy();
+    public ApiResponse<?> loginUser(UserLoginDto requstDto) {
+        String reqId = requstDto.getUserId();
+        String reqPwd = requstDto.getUserPwd();
+
+        //아이디 있는지 확인
+        if(!userRepository.existsById(reqId)){
+            return ApiResponse.error(reqId +"아이디가 존재하지 않습니다.");
+        };
+
+        //있다면 비번 맞는지 확인
+        UserResponseProjection userProjection = userRepository.findByUserId(reqId);
+        String userPwd = userProjection.getUserPwd();
+        if (!reqPwd.equals(userPwd)){
+            return ApiResponse.error(reqId + "/" +"패스워드가 일치하지않습니다.");
+        }
+
+        //TODO JWT 토큰 발급하기!!!
+
+        return ApiResponse.success(userProjection.getUserNm()+"님 로그인성공 하였습니다." , userProjection);
     }
+
+
 }

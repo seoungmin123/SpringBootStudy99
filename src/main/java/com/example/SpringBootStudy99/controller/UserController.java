@@ -1,16 +1,12 @@
 package com.example.SpringBootStudy99.controller;
 
 import com.example.SpringBootStudy99.common.ApiResponse;
-import com.example.SpringBootStudy99.domain.user.UserVO;
-import com.example.SpringBootStudy99.dto.BoardResponseDto;
 import com.example.SpringBootStudy99.dto.UserCreateRequstDto;
-import com.example.SpringBootStudy99.dto.UserResponseDto;
+import com.example.SpringBootStudy99.dto.UserLoginDto;
 import com.example.SpringBootStudy99.projection.UserResponseProjection;
-import com.example.SpringBootStudy99.repository.UserRepository;
 import com.example.SpringBootStudy99.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +35,11 @@ public class UserController {
     }
 
     //로그인
+    @GetMapping("/login")
+    public ResponseEntity<ApiResponse<?>> loginUser(
+            @RequestBody UserLoginDto requstDto){
+        ApiResponse<?> response = userServiceImpl.loginUser(requstDto);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 
 }
