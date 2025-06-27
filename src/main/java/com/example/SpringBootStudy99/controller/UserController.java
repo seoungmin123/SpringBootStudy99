@@ -1,12 +1,14 @@
 package com.example.SpringBootStudy99.controller;
 
 import com.example.SpringBootStudy99.common.ApiResponse;
+import com.example.SpringBootStudy99.dto.LoginResultDto;
 import com.example.SpringBootStudy99.dto.UserCreateRequstDto;
 import com.example.SpringBootStudy99.dto.UserLoginDto;
 import com.example.SpringBootStudy99.projection.UserResponseProjection;
 import com.example.SpringBootStudy99.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,10 +38,18 @@ public class UserController {
 
     //로그인
     @GetMapping("/login")
-    public ResponseEntity<ApiResponse<?>> loginUser(
-            @RequestBody UserLoginDto requstDto){
+    public ResponseEntity<ApiResponse<?>> loginUser(@RequestBody UserLoginDto requstDto){
         ApiResponse<?> response = userServiceImpl.loginUser(requstDto);
-        return ResponseEntity.status(response.getStatus()).body(response);
+
+        LoginResultDto loginDto = (LoginResultDto) response.getData();
+
+        //JWT발급전
+        //return ResponseEntity.status(response.getStatus()).body(response);
+
+        //JWT발급 후
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginDto.getToken() )
+                .body(ApiResponse.success("로그인성공",response));
     }
 
 }

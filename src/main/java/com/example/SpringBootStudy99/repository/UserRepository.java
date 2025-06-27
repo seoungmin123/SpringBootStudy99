@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<UserVO, String> {
     boolean existsById(String userId);
-    UserResponseProjection findByUserId(String userId);
+    UserVO findByUserId(String userId);
     List<UserResponseProjection> findAllProjectedBy();// Projection을 반환하도록 정의
 }
