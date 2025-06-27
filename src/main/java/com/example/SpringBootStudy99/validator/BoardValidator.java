@@ -13,16 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BoardValidator {
 
-    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
-
-
-    /** 사용자 존재 여부 확인 */
-    public void validateUserExists(String userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("등록되지 않은 사용자입니다. 사용자 아이디 : " + userId);
-        }
-    }
 
     /** 게시글 존재 여부 확인 및 반환 */
     public BoardVO getBoardOrThrow(Long boardId) {

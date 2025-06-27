@@ -1,13 +1,14 @@
 package com.example.SpringBootStudy99.service;
 
+import com.example.SpringBootStudy99.common.ValidateType;
 import com.example.SpringBootStudy99.domain.board.BoardVO;
 import com.example.SpringBootStudy99.dto.BoardCreateRequestDto;
 import com.example.SpringBootStudy99.dto.BoardListResponseDto;
 import com.example.SpringBootStudy99.dto.BoardResponseDto;
 import com.example.SpringBootStudy99.dto.BoardUpdateRequestDto;
 import com.example.SpringBootStudy99.repository.BoardRepository;
-import com.example.SpringBootStudy99.repository.UserRepository;
 import com.example.SpringBootStudy99.validator.BoardValidator;
+import com.example.SpringBootStudy99.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardValidator boardValidator;
+    private final UserValidator userValidator;
 
     //목록조회
     @Override
@@ -48,7 +50,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public BoardResponseDto createBoard(BoardCreateRequestDto requestDto) {
         //유효성 체크
-        boardValidator.validateUserExists(requestDto.getWriter()); //등록되지 않은유저일경우
+        userValidator.validateUserExists(requestDto.getWriter(), ValidateType.BOARD); //등록되지 않은유저일경우
 
         //정적 메서드 방식을 사용했음 BoardVO에 추가함
         BoardVO boardVO = BoardVO.from(requestDto);
