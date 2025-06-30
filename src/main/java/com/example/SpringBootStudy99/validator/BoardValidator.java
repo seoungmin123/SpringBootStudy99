@@ -3,8 +3,6 @@ package com.example.SpringBootStudy99.validator;
 import com.example.SpringBootStudy99.domain.board.BoardVO;
 import com.example.SpringBootStudy99.exception.BoardNotFoundException;
 import com.example.SpringBootStudy99.exception.InvalidPasswordException;
-import com.example.SpringBootStudy99.exception.UserNotFoundException;
-import com.example.SpringBootStudy99.repository.UserRepository;
 import com.example.SpringBootStudy99.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
