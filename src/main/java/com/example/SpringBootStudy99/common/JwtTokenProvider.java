@@ -25,7 +25,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    //토큰 유효성
+    //토큰 유효성 확인
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
