@@ -39,24 +39,67 @@ public class UserController {
         return  ResponseEntity.status(response.getStatus()).body(response);
     }
 
-    //로그인
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse<?>> loginUser(@RequestBody UserLoginDto requstDto){
-        ApiResponse<?> response = userServiceImpl.loginUser(requstDto);
+    //로그인 jwt
+    @PostMapping("/jwt/login")
+    public ResponseEntity<ApiResponse<?>> jwtLoginUser(@RequestBody UserLoginDto requstDto){
+        ApiResponse<?> response = userServiceImpl.jwtLoginUser(requstDto);
+
+        //로그인 실패시
+        if (!response.isSuccess()) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)  // 401이나 400 사용 가능
+                    .body(response);
+        }
 
         LoginResultDto loginDto = (LoginResultDto) response.getData();
-
-        //JWT발급전
-        //return ResponseEntity.status(response.getStatus()).body(response);
 
         //JWT발급 후
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginDto.getToken())
                 .body(ApiResponse.success("로그인성공", loginDto));
+
+        //JWT발급전
+        //return ResponseEntity.status(response.getStatus()).body(response);
+
     }
 
-    @GetMapping("/api/user/info")
+    @GetMapping("/jwt/info")
     public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        if (jwtTokenProvider.validateToken(token)) {
+            String userId = jwtTokenProvider.getUserIdFromToken(token);
+            return ResponseEntity.ok("안녕하세요, " + userId + "님");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 유효하지 않습니다.");
+        }
+    }
+
+    //로그인 cookie
+    @PostMapping("/cookie/login")
+    public ResponseEntity<ApiResponse<?>> cookieLoginUser(@RequestBody UserLoginDto requstDto){
+        ApiResponse<?> response = userServiceImpl.cookieLoginUser(requstDto);
+
+        //로그인 실패시
+        if (!response.isSuccess()) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)  // 401이나 400 사용 가능
+                    .body(response);
+        }
+
+        LoginResultDto loginDto = (LoginResultDto) response.getData();
+
+        //JWT발급 후
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginDto.getToken())
+                .body(ApiResponse.success("로그인성공", loginDto));
+
+        //JWT발급전
+        //return ResponseEntity.status(response.getStatus()).body(response);
+
+    }
+
+    @GetMapping("/cookie/info")
+    public ResponseEntity<?> getCookieUserInfo(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         if (jwtTokenProvider.validateToken(token)) {
             String userId = jwtTokenProvider.getUserIdFromToken(token);

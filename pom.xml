@@ -92,6 +92,29 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- 기본 API -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+
+		<!-- 구현체 (Keys, compact() 내부 기능 포함) -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- JSON 처리용 Jackson -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- JSON 처리 (jackson 사용 시) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
         //유효성 체크 - 이미 아이디가 있는지 확인
         if(userRepository.existsById(reqUserId)){
             return ApiResponse.error(reqUserId +"는 이미 존재하는 아이디입니다.");
-        };
+        }
 
         //아이디 비밀번호 유효성은 UserCreateRequstDto @Pattern 활용
         //받은 dto를 vo로 변경해서 저장해야댐
@@ -47,9 +47,9 @@ public class UserServiceImpl implements UserService{
         return ApiResponse.success("회원가입 성공", result);
     }
 
-    //로그인
+    //로그인 jwt
     @Override
-    public ApiResponse<?> loginUser(UserLoginDto requstDto) {
+    public ApiResponse<?> jwtLoginUser(UserLoginDto requstDto) {
         String reqId = requstDto.getUserId();
         String reqPwd = requstDto.getUserPwd();
 
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService{
         //아이디 있는지 확인
         if(!userRepository.existsById(reqId)){
             return ApiResponse.error(reqId +" 아이디가 존재하지 않습니다.");
-        };
+        }
 
         //있다면 비번 맞는지 확인
         UserVO userVO = userRepository.findByUserId(reqId);
@@ -82,5 +82,40 @@ public class UserServiceImpl implements UserService{
 
         }
 
+
+    //로그인 쿠키
+    @Override
+    public ApiResponse<?> cookieLoginUser(UserLoginDto requstDto) {
+        String reqId = requstDto.getUserId();
+        String reqPwd = requstDto.getUserPwd();
+
+        System.out.println("입력한 아이디: " + reqId);
+        System.out.println("입력한 비밀번호: " + reqPwd);
+
+        //아이디 있는지 확인
+        if(!userRepository.existsById(reqId)){
+            return ApiResponse.error(reqId +" 아이디가 존재하지 않습니다.");
+        }
+
+        //있다면 비번 맞는지 확인
+        UserVO userVO = userRepository.findByUserId(reqId);
+        System.out.println("DB 비밀번호: " + userVO.getUserPwd());
+
+        String userPwd = userVO.getUserPwd();
+        if (!reqPwd.equals(userPwd)){
+            return ApiResponse.error(reqId + "/" +" 패스워드가 일치하지않습니다.");
+        }
+
+        // 토큰 발급전
+        //return ApiResponse.success(userVO.getUserNm()+"님 로그인성공 하였습니다." , userVO);
+
+        //JWT 토큰 발급하기!!!
+        String token = jwtTokenProvider.generateToken(userVO.getUserId());
+        System.out.println(token);
+
+        LoginResultDto loginDto =  new LoginResultDto(userVO.getUserNm(), token);
+        return ApiResponse.success("로그인성공",loginDto);
+
+    }
 
 }

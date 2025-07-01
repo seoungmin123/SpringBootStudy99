@@ -3,15 +3,19 @@ package com.example.SpringBootStudy99.common;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
     //private final String secretKey = "my-jwt-secret-key";
-    private final String secretKey = Base64.getEncoder().encodeToString("my-jwt-secret-key".getBytes());
+   // private final String secretKey = Base64.getEncoder().encodeToString("my-jwt-secret-key".getBytes());
+
+    private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256); // 자동으로 강한 키 생성
 
     private final long expiration = 1000 * 60 * 60; // 1시간
 
@@ -21,7 +25,7 @@ public class JwtTokenProvider {
                 .setSubject(userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey)
                 .compact();
     }
 
