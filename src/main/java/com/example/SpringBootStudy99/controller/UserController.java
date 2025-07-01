@@ -68,9 +68,15 @@ public class UserController {
         String token = authHeader.replace("Bearer ", "");
         if (jwtTokenProvider.validateToken(token)) {
             String userId = jwtTokenProvider.getUserIdFromToken(token);
-            return ResponseEntity.ok("안녕하세요, " + userId + "님");
+
+            // ApiResponse 성공 포맷으로 반환
+            ApiResponse<String> response = ApiResponse.success("토큰 인증 성공", "안녕하세요, " + userId + "님");
+            return ResponseEntity.ok(response);
+
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 유효하지 않습니다.");
+            // ApiResponse 에러 포맷으로 반환
+            ApiResponse<?> errorResponse = ApiResponse.error(401, "토큰이 유효하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 
