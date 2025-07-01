@@ -53,6 +53,9 @@ public class UserServiceImpl implements UserService{
         String reqId = requstDto.getUserId();
         String reqPwd = requstDto.getUserPwd();
 
+        System.out.println("입력한 아이디: " + reqId);
+        System.out.println("입력한 비밀번호: " + reqPwd);
+
         //아이디 있는지 확인
         if(!userRepository.existsById(reqId)){
             return ApiResponse.error(reqId +" 아이디가 존재하지 않습니다.");
@@ -60,6 +63,8 @@ public class UserServiceImpl implements UserService{
 
         //있다면 비번 맞는지 확인
         UserVO userVO = userRepository.findByUserId(reqId);
+        System.out.println("DB 비밀번호: " + userVO.getUserPwd());
+
         String userPwd = userVO.getUserPwd();
         if (!reqPwd.equals(userPwd)){
             return ApiResponse.error(reqId + "/" +" 패스워드가 일치하지않습니다.");
@@ -70,6 +75,7 @@ public class UserServiceImpl implements UserService{
 
         //JWT 토큰 발급하기!!!
         String token = jwtTokenProvider.generateToken(userVO.getUserId());
+        System.out.println(token);
 
         LoginResultDto loginDto =  new LoginResultDto(userVO.getUserNm(), token);
         return ApiResponse.success("로그인성공",loginDto);
