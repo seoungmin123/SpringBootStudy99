@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,38 +83,45 @@ public class UserController {
 
     //로그인 cookie
     @PostMapping("/cookie/login")
-    public ResponseEntity<ApiResponse<?>> cookieLoginUser(@RequestBody UserLoginDto requstDto){
-        ApiResponse<?> response = userServiceImpl.cookieLoginUser(requstDto);
+    public ResponseEntity<ApiResponse<?>> cookieLoginUser(@RequestBody UserLoginDto requestDto) {
+        ApiResponse<?> response = userServiceImpl.cookieLoginUser(requestDto);
 
-        //로그인 실패시
         if (!response.isSuccess()) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)  // 401이나 400 사용 가능
-                    .body(response);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
         LoginResultDto loginDto = (LoginResultDto) response.getData();
+        String token = loginDto.getToken();
 
-        //JWT발급 후
+        // ✅ JWT를 쿠키에 저장
+        ResponseCookie cookie = ResponseCookie.from("jwt", token)
+                .httpOnly(true)
+                .secure(false) // HTTPS일 경우 true (현재는 테스트니까 false)
+                .path("/")
+                .maxAge(60 * 60) // 1시간
+                .sameSite("Lax") // Strict, Lax, None 중 선택 가능
+                .build();
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginDto.getToken())
-                .body(ApiResponse.success("로그인성공", loginDto));
-
-        //JWT발급전
-        //return ResponseEntity.status(response.getStatus()).body(response);
-
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(ApiResponse.success("로그인 성공", loginDto));
     }
+
 
     @GetMapping("/cookie/info")
-    public ResponseEntity<?> getCookieUserInfo(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        if (jwtTokenProvider.validateToken(token)) {
-            String userId = jwtTokenProvider.getUserIdFromToken(token);
-            return ResponseEntity.ok("안녕하세요, " + userId + "님");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 유효하지 않습니다.");
+    public ResponseEntity<?> getCookieUserInfo(
+            @CookieValue(name = "jwt", required = false) String token) {
+
+        if (token == null || !jwtTokenProvider.validateToken(token)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(401, "토큰이 유효하지 않거나 존재하지 않습니다."));
         }
+
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        return ResponseEntity.ok(ApiResponse.success("안녕하세요, " + userId + "님"));
     }
+
 
 
 }

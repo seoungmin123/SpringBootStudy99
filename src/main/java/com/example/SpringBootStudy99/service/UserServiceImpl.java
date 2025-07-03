@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService{
         System.out.println(token);
 
         LoginResultDto loginDto =  new LoginResultDto(userVO.getUserNm(), token);
-        return ApiResponse.success("로그인성공",loginDto);
+        return ApiResponse.success("로그인성공",loginDto);//
 
         }
 
