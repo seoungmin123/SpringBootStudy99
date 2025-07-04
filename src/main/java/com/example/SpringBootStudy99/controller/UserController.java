@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -93,7 +94,7 @@ public class UserController {
         LoginResultDto loginDto = (LoginResultDto) response.getData();
         String token = loginDto.getToken();
 
-        // ✅ JWT를 쿠키에 저장
+        // JWT를 쿠키에 저장
         ResponseCookie cookie = ResponseCookie.from("jwt", token)
                 .httpOnly(true)
                 .secure(false) // HTTPS일 경우 true (현재는 테스트니까 false)
@@ -122,6 +123,11 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("안녕하세요, " + userId + "님"));
     }
 
+    @GetMapping("/admin/data")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAdminData() {
+        return ResponseEntity.ok("관리자 전용 데이터입니다.");
+    }
 
 
 }

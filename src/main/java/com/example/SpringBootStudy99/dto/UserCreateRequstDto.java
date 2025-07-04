@@ -1,5 +1,6 @@
 package com.example.SpringBootStudy99.dto;
 
+import com.example.SpringBootStudy99.domain.user.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,6 @@ public class UserCreateRequstDto {
     @NotBlank(message = "이름은 필수입니다.")
     private String userNm;
 
+    private UserRole role;
 
 }

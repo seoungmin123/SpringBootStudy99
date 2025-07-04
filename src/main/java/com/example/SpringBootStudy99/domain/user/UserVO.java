@@ -1,17 +1,16 @@
 package com.example.SpringBootStudy99.domain.user;
 
-import com.example.SpringBootStudy99.domain.board.BoardVO;
-import com.example.SpringBootStudy99.dto.BoardCreateRequestDto;
 import com.example.SpringBootStudy99.dto.UserCreateRequstDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(name="user")
 public class UserVO {
 
@@ -30,6 +29,10 @@ public class UserVO {
     @Column(name = "rgst_dt", nullable = false)
     private LocalDateTime rgstDt;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+
     //생성자
     public UserVO(String userId, String userPwd, String userNm){
         this.userId = userId;
@@ -46,5 +49,7 @@ public class UserVO {
                 dto.getUserNm()
         );
     }
+
+
 
 }
