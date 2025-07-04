@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService{
                 .userNm(requestDto.getUserNm())
                 .userPwd(passwordEncoder.encode(requestDto.getUserPwd())) //  반드시 암호화 SecurityConfig.java
                 .role(UserRole.ROLE_USER) // 기본 권한 설정 -> 무조건 USER
+                .rgstDt(LocalDateTime.now())  //  직접 설정
                 .build();
 
         //회원가입 정보 저장

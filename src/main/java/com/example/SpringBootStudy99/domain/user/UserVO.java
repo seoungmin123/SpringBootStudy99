@@ -32,12 +32,19 @@ public class UserVO {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @PrePersist
+    public void prePersist() {
+        if (this.rgstDt == null) {
+            this.rgstDt = LocalDateTime.now();
+        }
+    }
 
     //생성자
-    public UserVO(String userId, String userPwd, String userNm){
+    public UserVO(String userId, String userPwd, String userNm, UserRole userRole){
         this.userId = userId;
         this.userPwd = userPwd;
         this.userNm = userNm;
+        this.role = userRole;
         this.rgstDt = LocalDateTime.now();
     }
 
@@ -46,7 +53,8 @@ public class UserVO {
         return new UserVO(
                 dto.getUserId(),
                 dto.getUserPwd(),
-                dto.getUserNm()
+                dto.getUserNm(),
+                dto.getRole()
         );
     }
 
