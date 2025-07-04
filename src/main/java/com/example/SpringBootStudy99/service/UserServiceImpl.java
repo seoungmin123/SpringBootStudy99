@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService{
         System.out.println("DB 비밀번호: " + userPwd);
 
 
-        if (passwordEncoder.matches(reqPwd, userPwd)) {//입력받은비번, DB에저장된암호화된비번
+        if (!passwordEncoder.matches(reqPwd, userPwd)) {//입력받은비번, DB에저장된암호화된비번
        // if (!reqPwd.equals(userPwd)){
             return ApiResponse.error(reqId + "/" +" 패스워드가 일치하지않습니다.");
         }
